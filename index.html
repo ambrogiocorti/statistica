@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisi Statistica | Noi e Scarpe</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --bg: #fafafa;
+            --primary: #0f172a;
+            --qual-color: #059669;   /* Verde */
+            --quant-color: #2563eb;  /* Blu */
+            --text: #334155;
+            --theory-bg: #fff7ed;
+            --theory-accent: #ea580c;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--bg);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { font-weight: 800; color: var(--primary); letter-spacing: -0.02em; }
+        h1 { font-size: clamp(3rem, 6vw, 5rem); line-height: 1; margin-bottom: 1.5rem; }
+        h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        section { padding: 80px 5%; max-width: 1400px; margin: 0 auto; }
+        
+        /* Layout a Blocchi per la teoria passo-passo */
+        .analysis-step {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: start;
+            padding-bottom: 40px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        .analysis-step:last-child { border-bottom: none; margin-bottom: 0; }
+        @media (max-width: 1100px) { .analysis-step { grid-template-columns: 1fr; } }
+
+        /* Badge */
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); letter-spacing: 1px; }
+        .b-qual { background: #ecfdf5; color: var(--qual-color); border: 1px solid #a7f3d0; }
+        .b-quant { background: #eff6ff; color: var(--quant-color); border: 1px solid #bfdbfe; }
+
+        /* --- QUADERNO DI TEORIA --- */
+        .theory-notebook {
+            background: var(--theory-bg);
+            border-left: 4px solid var(--theory-accent);
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+            box-shadow: 0 10px 30px -10px rgba(194, 65, 12, 0.08);
+            position: sticky; top: 20px;
+        }
+        .theory-header {
+            color: var(--theory-accent); font-weight: 800; text-transform: uppercase; 
+            font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .step-title { font-weight: 700; color: #9a3412; font-size: 1.1rem; display: block; margin-bottom: 10px; }
+        .theory-text { font-size: 0.95rem; color: #7c2d12; margin-bottom: 15px; }
+
+        /* FORMULE LATEX STYLE */
+        .math-card {
+            background: white; padding: 12px; border-radius: 8px; border: 1px solid #fed7aa;
+            margin-top: 5px; font-family: 'Crimson Pro', serif; font-size: 1.2rem; color: #1e293b;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 4px; }
+        .frac .num { border-bottom: 1px solid currentColor; padding-bottom: 2px; font-size: 0.9em; }
+        .frac .den { padding-top: 2px; font-size: 0.9em; }
+        .var { font-style: italic; font-weight: 600; }
+        .sym { font-family: 'Crimson Pro', serif; }
+
+        /* --- TABELLA & GRAFICI --- */
+        .table-wrapper { overflow-x: auto; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border); margin-bottom: 20px; }
+        .excel-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; white-space: nowrap; }
+        .excel-table th { background: #f8fafc; padding: 12px 15px; font-weight: 700; color: var(--primary); border-bottom: 2px solid #cbd5e1; text-align: center; }
+        .excel-table td { padding: 10px 15px; border-bottom: 1px solid #f1f5f9; text-align: center; color: var(--text); }
+        .excel-table td:first-child { text-align: left; font-weight: 700; position: sticky; left: 0; background: #fff; border-right: 2px solid #f1f5f9; z-index: 10; }
+        .chart-card { background: white; border: 1px solid var(--border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); margin-top: 20px;}
+
+        /* --- QUANTITATIVA STYLES --- */
+        .scrollable-table { max-height: 500px; overflow-y: auto; border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; }
+        .scrollable-table table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .scrollable-table th { position: sticky; top: 0; background: #f1f5f9; z-index: 20; padding: 10px; text-align: center; border-bottom: 2px solid #cbd5e1; }
+        .scrollable-table td { padding: 8px; text-align: center; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+
+        .stats-grid-box { background: #f8fafc; border-radius: 16px; padding: 25px; border: 1px solid #e2e8f0; margin-bottom: 30px; }
+        .stat-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1.5fr; gap: 10px; align-items: center; padding: 12px 0; border-bottom: 1px dashed #cbd5e1; }
+        .stat-label { font-weight: 600; color: #64748b; font-size: 0.9rem; }
+        .stat-val { font-weight: 800; color: var(--quant-color); font-family: 'Crimson Pro', serif; font-size: 1.1rem; text-align: right; }
+        
+        /* EXCEL FORMULA STYLE */
+        .formula-tag {
+            background: #fff; color: #64748b; padding: 4px 10px; border-radius: 6px; 
+            font-family: 'Outfit', sans-serif; font-size: 0.75rem; border: 1px solid #e2e8f0;
+            display: inline-block; white-space: nowrap; font-weight: 500;
+            text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        /* --- VERDETTO --- */
+        .verdict-banner {
+            padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; color: white;
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); transition: transform 0.3s ease;
+        }
+        .verdict-banner:hover { transform: translateY(-3px); }
+        .v-qual { background: linear-gradient(135deg, #059669 0%, #047857 100%); border: 1px solid #34d399; }
+        .v-quant { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); border: 1px solid #60a5fa; }
+        .v-icon-box { background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .v-text { font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
+
+        /* --- SINTESI FINALE --- */
+        .synthesis-section { background: #0f172a; color: white; padding: 100px 5%; margin-top: 80px; border-radius: 40px 40px 0 0; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 24px; transition: transform 0.3s; }
+        .glass-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.08); }
+        .glass-number { font-size: 3rem; font-weight: 800; margin-bottom: 10px; line-height: 1; }
+        .glass-desc { opacity: 0.8; line-height: 1.5; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 0.15s; } .delay-200 { transition-delay: 0.3s; }
+
+        header { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at 50% 0%, #eff6ff, white); padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="reveal">
+            <span class="badge" style="background: white; border: 1px solid #cbd5e1; color: var(--primary);">
+                <i data-lucide="bar-chart-2" size="16"></i> Progetto Statistica 2026
+            </span>
+            <h1>Noi e Scarpe</h1>
+            <p style="font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px auto; color: #64748b;">
+                Analisi bivariata: esiste un legame tra età, brand e prezzo?
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="#qualitativa" style="text-decoration: none; padding: 15px 35px; background: var(--qual-color); color: white; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 20px rgba(5, 150, 105, 0.25);">
+                    Analisi Qualitativa
+                </a>
+                <a href="#quantitativa" style="text-decoration: none; padding: 15px 35px; background: var(--quant-color); color: white; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);">
+                    Analisi Quantitativa
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section id="qualitativa">
+        <div class="reveal" style="margin-bottom: 50px;">
+            <span class="badge b-qual"><i data-lucide="layers" size="14"></i> &nbsp; Statistica Qualitativa</span>
+            <h2 style="color: var(--qual-color);">Età vs Brand Preferito</h2>
+            <p>Confrontiamo la distribuzione osservata con quella teorica.</p>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="eye"></i> 1. Osservazione</div>
+                <span class="step-title">Dati Rilevati</span>
+                <p class="theory-text">
+                    La prima fase consiste nel raccogliere i dati reali tramite il sondaggio e organizzarli in una <strong>tabella a doppia entrata</strong>.
+                    Qui incrociamo le fasce d'età (righe) con i brand preferiti (colonne).
+                </p>
+            </div>
+            
+            <div>
+                <h3 style="margin-bottom: 15px;">Frequenze Congiunte Osservate</h3>
+                <div class="table-wrapper">
+                    <table class="excel-table">
+                        <thead>
+                            <tr>
+                                <th>Età / Brand</th><th>15-24</th><th>25-34</th><th>35-44</th><th>45-54</th><th>55-64+</th><th>Tot.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Nike</td><td>32</td><td>0</td><td>1</td><td>0</td><td>0</td><td>33</td></tr>
+                            <tr><td>Adidas</td><td>14</td><td>1</td><td>0</td><td>0</td><td>0</td><td>15</td></tr>
+                            <tr><td>Asics</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>3</td></tr>
+                            <tr><td>New Balance</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr>
+                            <tr><td>Converse / Vans</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td></tr>
+                            <tr><td>Scarpa Classica</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+                            <tr><td>Altro</td><td>3</td><td>1</td><td>0</td><td>2</td><td>1</td><td>7</td></tr>
+                            <tr><td><strong>Marginali</strong></td><td><strong>54</strong></td><td><strong>2</strong></td><td><strong>1</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td><strong>64</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="book-open"></i> 2. Ipotesi Teorica</div>
+                <span class="step-title">Frequenze Teoriche ($F^*_{ij}$)</span>
+                <p class="theory-text">
+                    Calcoliamo come <strong>dovrebbero</strong> essere distribuiti i dati se l'Età e il Brand fossero totalmente indipendenti.
+                    <br><br>
+                    Si ottiene moltiplicando il totale di riga per il totale di colonna, diviso il totale generale ($n$).
+                </p>
+                <div class="math-card">
+                    <span class="var">F*</span> <span class="sym">=</span> 
+                    <div class="frac">
+                        <span class="num">Tot.Col <span class="sym">×</span> Tot.Riga</span>
+                        <span class="den"><span class="var">n</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 15px;">Tabella di Indipendenza Teorica</h3>
+                <div class="table-wrapper">
+                    <table class="excel-table">
+                        <thead>
+                            <tr>
+                                <th>Età / Brand</th><th>15-24</th><th>25-34</th><th>35-44</th><th>45-54</th><th>55-64+</th><th>Tot.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Nike</td><td>27,84</td><td>1,03</td><td>0,51</td><td>2,06</td><td>1,54</td><td>33</td></tr>
+                            <tr><td>Adidas</td><td>12,65</td><td>0,46</td><td>0,23</td><td>0,93</td><td>0,70</td><td>15</td></tr>
+                            <tr><td>Asics</td><td>2,53</td><td>0,09</td><td>0,04</td><td>0,18</td><td>0,14</td><td>3</td></tr>
+                            <tr><td>New Balance</td><td>1,68</td><td>0,06</td><td>0,03</td><td>0,12</td><td>0,09</td><td>2</td></tr>
+                            <tr><td>Converse / Vans</td><td>1,68</td><td>0,06</td><td>0,03</td><td>0,12</td><td>0,09</td><td>2</td></tr>
+                            <tr><td>Scarpa Classica</td><td>1,68</td><td>0,06</td><td>0,03</td><td>0,12</td><td>0,09</td><td>2</td></tr>
+                            <tr><td>Altro</td><td>5,90</td><td>0,21</td><td>0,10</td><td>0,43</td><td>0,32</td><td>7</td></tr>
+                            <tr><td><strong>Marginali</strong></td><td><strong>54</strong></td><td><strong>2</strong></td><td><strong>1</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td><strong>64</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="git-compare"></i> 3. Confronto</div>
+                <span class="step-title">La Contingenza ($c_{ij}$)</span>
+                <p class="theory-text">
+                    Misuriamo lo <strong>scarto</strong> tra la realtà (Osservata) e l'ipotesi (Teorica).
+                    <br><br>
+                    Se il valore è positivo, c'è "attrazione" tra quell'età e quel brand. Se negativo, c'è "repulsione".
+                </p>
+                <div class="math-card">
+                    <span class="var">c</span> <span class="sym">=</span> <span class="var">F_oss</span> <span class="sym">-</span> <span class="var">F*</span>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 15px;">Tabella delle Contingenze</h3>
+                <div class="table-wrapper">
+                    <table class="excel-table">
+                        <thead>
+                            <tr>
+                                <th>Età / Brand</th><th>15-24</th><th>25-34</th><th>35-44</th><th>45-54</th><th>55-64+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Nike</td><td>4,15</td><td>-1,03</td><td>0,48</td><td>-2,06</td><td>-1,54</td></tr>
+                            <tr><td>Adidas</td><td>1,34</td><td>0,53</td><td>-0,23</td><td>-0,93</td><td>-0,70</td></tr>
+                            <tr><td>Asics</td><td>-1,53</td><td>-0,09</td><td>-0,04</td><td>0,81</td><td>0,85</td></tr>
+                            <tr><td>New Balance</td><td>0,31</td><td>-0,06</td><td>-0,03</td><td>-0,12</td><td>-0,09</td></tr>
+                            <tr><td>Converse / Vans</td><td>0,31</td><td>-0,06</td><td>-0,03</td><td>-0,12</td><td>-0,09</td></tr>
+                            <tr><td>Scarpa Classica</td><td>-1,68</td><td>-0,06</td><td>-0,03</td><td>0,87</td><td>0,90</td></tr>
+                            <tr><td>Altro</td><td>-2,90</td><td>0,78</td><td>-0,10</td><td>1,56</td><td>0,67</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="calculator"></i> 4. Indici Finali</div>
+                <span class="step-title">Chi-Quadro e Cramer</span>
+                <p class="theory-text">
+                    Il <strong>Chi-Quadro ($\chi^2$)</strong> somma tutti gli scarti al quadrato (pesati).
+                    <br>
+                    L'indice di <strong>Cramer ($C$)</strong> normalizza il risultato tra 0 e 1 per darci un'idea chiara dell'intensità del legame.
+                </p>
+                <div class="math-card">
+                    <span class="var">C</span> <span class="sym">=</span> 
+                    <span class="sym" style="font-size:1.4em;">√</span>
+                    <div class="frac">
+                        <span class="num"><span class="var">χ²</span></span>
+                        <span class="den"><span class="var">n</span> <span class="sym">·</span> min(<span class="var">k</span>-1)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 20px;">Risultati (Aggiornati)</h3>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+                    <div style="flex: 1; background: white; padding: 25px; border-radius: 16px; border: 1px solid #cbd5e1; text-align: center;">
+                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Chi Quadro ($\chi^2$)</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--qual-color);">46,87</div>
+                    </div>
+                    <div style="flex: 1; background: white; padding: 25px; border-radius: 16px; border: 1px solid #cbd5e1; text-align: center;">
+                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Indice di Cramer ($C$)</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--qual-color);">0,3348</div>
+                    </div>
+                </div>
+
+                <div class="verdict-banner v-qual">
+                    <div class="v-icon-box"><i data-lucide="link" size="28"></i></div>
+                    <div>
+                        <div class="v-label">Verdetto Statistico</div>
+                        <div class="v-text">CORRELAZIONE MODERATA</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                            L'indice (0,33) indica che l'età influenza parzialmente la scelta del brand.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quantitativa">
+        <div class="reveal">
+            <span class="badge b-quant"><i data-lucide="trending-up" size="14"></i> &nbsp; Statistica Quantitativa</span>
+            <h2 style="color: var(--quant-color);">Prezzo vs Comfort</h2>
+            <p style="margin-bottom: 50px;">Analizziamo se c'è una correlazione lineare tra il costo delle scarpe e la comodità percepita.</p>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="table"></i> 1. Scarti dalla Media</div>
+                <span class="step-title">Tabella dei Calcoli</span>
+                <p class="theory-text">
+                    Per ogni intervistato, confrontiamo il prezzo ($x_i$) e il comfort ($y_i$) con le medie generali ($\bar{x}, \bar{y}$).
+                </p>
+            </div>
+            
+            <div>
+                <h3 style="margin-bottom: 20px;">Tabella Completa (64 unità)</h3>
+                <div class="scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>$x_i$ (Prezzo)</th> <th>$y_i$ (Comfort)</th> <th>$x_i - \bar{x}$</th> <th>$y_i - \bar{y}$</th> <th>Prod. Scarti</th> <th>$(x_i - \bar{x})^2$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>30</td><td>8</td><td>-66,20</td><td>-0,39</td><td>25,86</td><td>4382,85</td></tr>
+                            <tr><td>40</td><td>7</td><td>-56,20</td><td>-1,39</td><td>78,15</td><td>3158,79</td></tr>
+                            <tr><td>40</td><td>8</td><td>-56,20</td><td>-0,39</td><td>21,95</td><td>3158,79</td></tr>
+                            <tr><td>40</td><td>7</td><td>-56,20</td><td>-1,39</td><td>78,15</td><td>3158,79</td></tr>
+                            <tr><td>45</td><td>8</td><td>-51,20</td><td>-0,39</td><td>20,00</td><td>2621,76</td></tr>
+                            <tr><td>50</td><td>8</td><td>-46,20</td><td>-0,39</td><td>18,04</td><td>2134,72</td></tr>
+                            <tr><td>50</td><td>10</td><td>-46,20</td><td>1,60</td><td>-74,35</td><td>2134,72</td></tr>
+                            <tr><td>50</td><td>8</td><td>-46,20</td><td>-0,39</td><td>18,04</td><td>2134,72</td></tr>
+                            <tr><td>50</td><td>8</td><td>-46,20</td><td>-0,39</td><td>18,04</td><td>2134,72</td></tr>
+                            <tr><td>60</td><td>8</td><td>-36,20</td><td>-0,39</td><td>14,14</td><td>1310,66</td></tr>
+                            <tr><td>60</td><td>7</td><td>-36,20</td><td>-1,39</td><td>50,34</td><td>1310,66</td></tr>
+                            <tr><td>60</td><td>8</td><td>-36,20</td><td>-0,39</td><td>14,14</td><td>1310,66</td></tr>
+                            <tr><td>65</td><td>9</td><td>-31,20</td><td>0,60</td><td>-19,01</td><td>973,63</td></tr>
+                            <tr><td>65</td><td>9</td><td>-31,20</td><td>0,60</td><td>-19,01</td><td>973,63</td></tr>
+                            <tr><td>65</td><td>8</td><td>-31,20</td><td>-0,39</td><td>12,18</td><td>973,63</td></tr>
+                            <tr><td>70</td><td>9</td><td>-26,20</td><td>0,60</td><td>-15,96</td><td>686,60</td></tr>
+                            <tr><td>70</td><td>9</td><td>-26,20</td><td>0,60</td><td>-15,96</td><td>686,60</td></tr>
+                            <tr><td>70</td><td>8</td><td>-26,20</td><td>-0,39</td><td>10,23</td><td>686,60</td></tr>
+                            <tr><td>73</td><td>8</td><td>-23,20</td><td>-0,39</td><td>9,06</td><td>538,38</td></tr>
+                            <tr><td>80</td><td>9</td><td>-16,20</td><td>0,60</td><td>-9,87</td><td>262,54</td></tr>
+                            <tr><td>80</td><td>10</td><td>-16,20</td><td>1,60</td><td>-26,07</td><td>262,54</td></tr>
+                            <tr><td>80</td><td>9</td><td>-16,20</td><td>0,60</td><td>-9,87</td><td>262,54</td></tr>
+                            <tr><td>80</td><td>6</td><td>-16,20</td><td>-2,39</td><td>38,73</td><td>262,54</td></tr>
+                            <tr><td>80</td><td>10</td><td>-16,20</td><td>1,60</td><td>-26,07</td><td>262,54</td></tr>
+                            <tr><td>85</td><td>7</td><td>-11,20</td><td>-1,39</td><td>15,57</td><td>125,51</td></tr>
+                            <tr><td>90</td><td>9</td><td>-6,20</td><td>0,60</td><td>-3,78</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>9</td><td>-6,20</td><td>0,60</td><td>-3,78</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>8</td><td>-6,20</td><td>-0,39</td><td>2,42</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>8</td><td>-6,20</td><td>-0,39</td><td>2,42</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>5</td><td>-6,20</td><td>-3,39</td><td>21,03</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>8</td><td>-6,20</td><td>-0,39</td><td>2,42</td><td>38,47</td></tr>
+                            <tr><td>90</td><td>10</td><td>-6,20</td><td>1,60</td><td>-9,98</td><td>38,47</td></tr>
+                            <tr><td>95</td><td>6</td><td>-1,20</td><td>-2,39</td><td>2,87</td><td>1,44</td></tr>
+                            <tr><td>100</td><td>8</td><td>3,79</td><td>-0,39</td><td>-1,48</td><td>14,41</td></tr>
+                            <tr><td>100</td><td>9</td><td>3,79</td><td>0,60</td><td>2,31</td><td>14,41</td></tr>
+                            <tr><td>100</td><td>8</td><td>3,79</td><td>-0,39</td><td>-1,48</td><td>14,41</td></tr>
+                            <tr><td>100</td><td>7</td><td>3,79</td><td>-1,39</td><td>-5,28</td><td>14,41</td></tr>
+                            <tr><td>100</td><td>9</td><td>3,79</td><td>0,60</td><td>2,31</td><td>14,41</td></tr>
+                            <tr><td>100</td><td>8</td><td>3,79</td><td>-0,39</td><td>-1,48</td><td>14,41</td></tr>
+                            <tr><td>110</td><td>10</td><td>13,79</td><td>1,60</td><td>22,20</td><td>190,35</td></tr>
+                            <tr><td>110</td><td>9</td><td>13,79</td><td>0,60</td><td>8,40</td><td>190,35</td></tr>
+                            <tr><td>119</td><td>9</td><td>22,79</td><td>0,60</td><td>13,89</td><td>519,69</td></tr>
+                            <tr><td>120</td><td>9</td><td>23,79</td><td>0,60</td><td>14,50</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>10</td><td>23,79</td><td>1,60</td><td>38,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>9</td><td>23,79</td><td>0,60</td><td>14,50</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>9</td><td>23,79</td><td>0,60</td><td>14,50</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>10</td><td>23,79</td><td>1,60</td><td>38,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>9</td><td>23,79</td><td>0,60</td><td>14,50</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>10</td><td>23,79</td><td>1,60</td><td>38,29</td><td>566,29</td></tr>
+                            <tr><td>120</td><td>8</td><td>23,79</td><td>-0,39</td><td>-9,29</td><td>566,29</td></tr>
+                            <tr><td>130</td><td>9</td><td>33,79</td><td>0,60</td><td>20,59</td><td>1142,22</td></tr>
+                            <tr><td>130</td><td>9</td><td>33,79</td><td>0,60</td><td>20,59</td><td>1142,22</td></tr>
+                            <tr><td>130</td><td>10</td><td>33,79</td><td>1,60</td><td>54,39</td><td>1142,22</td></tr>
+                            <tr><td>140</td><td>8</td><td>43,79</td><td>-0,39</td><td>-17,10</td><td>1918,16</td></tr>
+                            <tr><td>150</td><td>8</td><td>53,79</td><td>-0,39</td><td>-21,01</td><td>2894,10</td></tr>
+                            <tr><td>150</td><td>10</td><td>53,79</td><td>1,60</td><td>86,57</td><td>2894,10</td></tr>
+                            <tr><td>150</td><td>8</td><td>53,79</td><td>-0,39</td><td>-21,01</td><td>2894,10</td></tr>
+                            <tr><td>185</td><td>9</td><td>88,79</td><td>0,60</td><td>54,11</td><td>7884,88</td></tr>
+                            <tr><td>230</td><td>6</td><td>133,79</td><td>-2,39</td><td>-319,85</td><td>17901,60</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="calculator"></i> 2. Indici Statistici</div>
+                <span class="step-title">Formule & Risultati</span>
+                <p class="theory-text">
+                    Di seguito sono riportati gli indici calcolati. Ecco una legenda sintetica per interpretarli:
+                </p>
+                <div style="margin-top: 15px; font-size: 0.9rem; color: #475569;">
+                    <p style="margin-bottom: 8px;"><strong>• Media ($\bar{x}, \bar{y}$):</strong> Il valore centrale o "baricentro" della distribuzione.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Somma Prodotti (Codevianza):</strong> La somma degli scarti incrociati. È la base per calcolare la covarianza.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Devianza ($Dev$):</strong> Misura la dispersione totale dei dati (somma dei quadrati degli scarti).</p>
+                    <p style="margin-bottom: 8px;"><strong>• Coefficiente ($a$):</strong> La pendenza della retta di regressione. Indica quanto cambia $y$ al variare di $x$.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Covarianza:</strong> La media della Codevianza. Indica la direzione della relazione tra le variabili.</p>
+                    <p style="margin-bottom: 0;"><strong>• Correlazione ($r$):</strong> Indice normalizzato (da -1 a +1) che misura la forza del legame lineare.</p>
+                </div>
+            </div>
+            
+            <div class="stats-grid-box" style="margin-bottom: 0;">
+                
+                <div class="stat-row">
+                    <span class="stat-label">Media Prezzo</span>
+                    <span class="formula-tag">MEDIA(X)</span>
+                    <span class="stat-val">96,203125</span>
+                </div>
+                
+                <div class="stat-row">
+                    <span class="stat-label">Media Comfort</span>
+                    <span class="formula-tag">MEDIA(Y)</span>
+                    <span class="stat-val">8,390625</span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="stat-label">Somma Prodotti</span>
+                    <span class="formula-tag">SOMMA(Prod.Scarti)</span>
+                    <span class="stat-val">253,921875</span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="stat-label">Devianza X</span>
+                    <span class="formula-tag">SOMMA(Scarti²)</span>
+                    <span class="stat-val">84.342,35938</span>
+                </div>
+                
+                <div class="stat-row">
+                    <span class="stat-label">Coeff. Reg. (a)</span>
+                    <span class="formula-tag">Codevianza / Devianza X</span>
+                    <span class="stat-val">0,003010609</span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="stat-label">Covarianza</span>
+                    <span class="formula-tag">Codevianza / N</span>
+                    <span class="stat-val">3,967529297</span>
+                </div>
+                
+                 <div class="stat-row" style="background: #dbeafe; border-radius: 6px; border: 1px solid #bfdbfe;">
+                    <span class="stat-label" style="color:#1e3a8a;">Correlazione (r)</span>
+                    <span class="formula-tag" style="background:white; color:#1e3a8a;">Covarianza / (σx * σy)</span>
+                    <span class="stat-val" style="color:#1e3a8a;">6,25256E-07</span>
+                </div>
+                
+                 <div class="stat-row" style="margin-top:20px; border-top: 2px solid #e2e8f0; border-bottom: none;">
+                    <span class="stat-label">Devianza Y (Somma Quadr.)</span>
+                    <span class="formula-tag">DEV.Q(Y)</span>
+                    <span class="stat-val">75,234375</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="line-chart"></i> 3. Analisi Grafica</div>
+                <span class="step-title">La Retta di Regressione</span>
+                <p class="theory-text">
+                    La retta rossa rappresenta il modello matematico $y = a \cdot x + b$.
+                    <br><br>
+                    Il coefficiente $a$ è bassissimo (0,003). Questo si traduce in una linea quasi perfettamente <strong>orizzontale</strong>. 
+                </p>
+                
+                <div style="margin-top: 20px; padding: 15px; background: white; border: 1px dashed #2563eb; border-radius: 12px; text-align: center;">
+                    <span class="step-title" style="color: #1e40af; font-size: 0.9rem;">Previsione Futura ($x=250€$)</span>
+                    <div style="font-size: 1.8rem; font-weight: 800; color: #1e3a8a;">
+                        8,853652276
+                    </div>
+                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Voto Atteso</div>
+                    <span class="formula-tag" style="font-size: 0.75rem;">y = a * 250 + Intercetta</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="chart-card" style="margin-top: 0;">
+                    <h3 style="margin-bottom: 20px;">Scatter Plot con Retta</h3>
+                    <div style="height: 400px;">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="verdict-banner v-quant" style="margin-top: 20px;">
+                    <div class="v-icon-box"><i data-lucide="minimize-2" size="28"></i></div>
+                    <div>
+                        <div class="v-label">Verdetto Statistico</div>
+                        <div class="v-text">ASSENZA DI CORRELAZIONE</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                            I punti sono sparsi senza ordine. Il prezzo non influenza il comfort.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="synthesis-section">
+        <div class="reveal">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <h2 style="font-size: 3.5rem; margin-bottom: 20px; color: white;">Conclusioni</h2>
+                <p style="font-size: 1.3rem; opacity: 0.8;">
+                    Dati alla mano: l'individualità vince sui trend statistici.
+                </p>
+            </div>
+
+            <div class="info-grid">
+                <div class="glass-card">
+                    <div class="glass-icon"><i data-lucide="users" size="24" color="white"></i></div>
+                    <span class="glass-label">Il Campione</span>
+                    <div class="glass-number">64</div>
+                    <p class="glass-desc">Intervistati totali, con una netta prevalenza (84%) della fascia 15-24 anni.</p>
+                </div>
+
+                <div class="glass-card" style="border-top: 4px solid #34d399;">
+                    <div class="glass-icon"><i data-lucide="split" size="24" color="#34d399"></i></div>
+                    <span class="glass-label" style="color: #34d399;">Qualitativa</span>
+                    <div class="glass-number" style="color: #34d399;">Moderata</div>
+                    <p class="glass-desc">L'età influenza parzialmente (0,33) la scelta del brand.</p>
+                </div>
+
+                <div class="glass-card" style="border-top: 4px solid #60a5fa;">
+                    <div class="glass-icon"><i data-lucide="bar-chart-horizontal" size="24" color="#60a5fa"></i></div>
+                    <span class="glass-label" style="color: #60a5fa;">Quantitativa</span>
+                    <div class="glass-number" style="color: #60a5fa;">Non Correlato</div>
+                    <p class="glass-desc">Spendere di più non garantisce comfort. La percezione è puramente soggettiva.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 80px; text-align: center; opacity: 0.4; font-size: 0.9rem;">
+                Progetto Scolastico 2026 &bull; Realizzato con HTML & Chart.js
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+        
+        // Animazione Scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Grafico Scatter (Quantitativa)
+        new Chart(document.getElementById('scatterChart'), {
+            type: 'bubble', // Usiamo bubble per i punti
+            data: {
+                datasets: [
+                    {
+                        type: 'bubble',
+                        label: 'Dati Osservati',
+                        data: [
+                            {x: 30, y: 8, r: 4}, {x: 40, y: 7, r: 8}, {x: 40, y: 8, r: 5},
+                            {x: 50, y: 8, r: 12}, {x: 50, y: 10, r: 6}, {x: 60, y: 8, r: 8},
+                            {x: 70, y: 9, r: 6}, {x: 80, y: 9, r: 10}, {x: 90, y: 8, r: 15},
+                            {x: 100, y: 8, r: 10}, {x: 100, y: 9, r: 12}, {x: 120, y: 8, r: 20},
+                            {x: 120, y: 9, r: 15}, {x: 120, y: 10, r: 8}, {x: 150, y: 8, r: 6},
+                            {x: 230, y: 6, r: 4}
+                        ],
+                        backgroundColor: 'rgba(37, 99, 235, 0.5)',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    },
+                    {
+                        type: 'line',
+                        label: 'Retta di Regressione',
+                        // Calcolata con y = 0.003x + 8.10 (circa)
+                        data: [
+                            {x: 0, y: 8.10}, 
+                            {x: 260, y: 8.88}
+                        ],
+                        borderColor: '#dc2626', // Rossa per contrasto
+                        borderWidth: 2,
+                        pointRadius: 0, // Nessun punto sulla linea
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom' },
+                    tooltip: { 
+                        callbacks: { 
+                            label: (ctx) => {
+                                if(ctx.dataset.type === 'line') return null;
+                                return `€${ctx.raw.x} - Voto ${ctx.raw.y}`;
+                            } 
+                        } 
+                    }
+                },
+                scales: {
+                    x: { 
+                        title: { display: true, text: 'Prezzo (€)', font: {size: 14, weight: 'bold'} },
+                        grid: { color: '#f1f5f9' },
+                        min: 0, max: 250
+                    },
+                    y: { 
+                        title: { display: true, text: 'Comfort (1-10)', font: {size: 14, weight: 'bold'} },
+                        min: 4, max: 11,
+                        grid: { color: '#f1f5f9' } 
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
