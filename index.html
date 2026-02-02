@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analisi Statistica | Noi e Scarpe</title>
+    <title>Analisi Statistica</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,12 +11,11 @@
     <link rel="shortcut icon" href="./stats.png" type="image/x-icon">
 
     <style>
-        /* --- DESIGN SYSTEM --- */
         :root {
             --bg: #fafafa;
             --primary: #0f172a;
-            --qual-color: #059669;   /* Verde */
-            --quant-color: #2563eb;  /* Blu */
+            --qual-color: #059669;
+            --quant-color: #2563eb;
             --text: #334155;
             --theory-bg: #fff7ed;
             --theory-accent: #ea580c;
@@ -39,7 +38,6 @@
         
         section { padding: 80px 5%; max-width: 1400px; margin: 0 auto; }
         
-        /* Layout a Blocchi per la teoria passo-passo */
         .analysis-step {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
@@ -52,12 +50,10 @@
         .analysis-step:last-child { border-bottom: none; margin-bottom: 0; }
         @media (max-width: 1100px) { .analysis-step { grid-template-columns: 1fr; } }
 
-        /* Badge */
         .badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); letter-spacing: 1px; }
         .b-qual { background: #ecfdf5; color: var(--qual-color); border: 1px solid #a7f3d0; }
         .b-quant { background: #eff6ff; color: var(--quant-color); border: 1px solid #bfdbfe; }
 
-        /* --- QUADERNO DI TEORIA --- */
         .theory-notebook {
             background: var(--theory-bg);
             border-left: 4px solid var(--theory-accent);
@@ -74,7 +70,6 @@
         .step-title { font-weight: 700; color: #9a3412; font-size: 1.1rem; display: block; margin-bottom: 10px; }
         .theory-text { font-size: 0.95rem; color: #7c2d12; margin-bottom: 15px; }
 
-        /* FORMULE LATEX STYLE */
         .math-card {
             background: white; padding: 12px; border-radius: 8px; border: 1px solid #fed7aa;
             margin-top: 5px; font-family: 'Crimson Pro', serif; font-size: 1.2rem; color: #1e293b;
@@ -87,7 +82,6 @@
         .var { font-style: italic; font-weight: 600; }
         .sym { font-family: 'Crimson Pro', serif; }
 
-        /* --- TABELLA & GRAFICI --- */
         .table-wrapper { overflow-x: auto; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border); margin-bottom: 20px; }
         .excel-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; white-space: nowrap; }
         .excel-table th { background: #f8fafc; padding: 12px 15px; font-weight: 700; color: var(--primary); border-bottom: 2px solid #cbd5e1; text-align: center; }
@@ -95,7 +89,6 @@
         .excel-table td:first-child { text-align: left; font-weight: 700; position: sticky; left: 0; background: #fff; border-right: 2px solid #f1f5f9; z-index: 10; }
         .chart-card { background: white; border: 1px solid var(--border); border-radius: 24px; padding: 30px; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); margin-top: 20px;}
 
-        /* --- QUANTITATIVA STYLES --- */
         .scrollable-table { max-height: 500px; overflow-y: auto; border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; }
         .scrollable-table table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
         .scrollable-table th { position: sticky; top: 0; background: #f1f5f9; z-index: 20; padding: 10px; text-align: center; border-bottom: 2px solid #cbd5e1; }
@@ -106,7 +99,6 @@
         .stat-label { font-weight: 600; color: #64748b; font-size: 0.9rem; }
         .stat-val { font-weight: 800; color: var(--quant-color); font-family: 'Crimson Pro', serif; font-size: 1.1rem; text-align: right; }
         
-        /* EXCEL FORMULA STYLE */
         .formula-tag {
             background: #fff; color: #64748b; padding: 4px 10px; border-radius: 6px; 
             font-family: 'Outfit', sans-serif; font-size: 0.75rem; border: 1px solid #e2e8f0;
@@ -114,7 +106,6 @@
             text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-        /* --- VERDETTO --- */
         .verdict-banner {
             padding: 25px; border-radius: 16px; display: flex; align-items: center; gap: 20px; color: white;
             box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); transition: transform 0.3s ease;
@@ -125,7 +116,6 @@
         .v-icon-box { background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .v-text { font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
 
-        /* --- SINTESI FINALE --- */
         .synthesis-section { background: #0f172a; color: white; padding: 100px 5%; margin-top: 80px; border-radius: 40px 40px 0 0; }
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px; }
         .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 24px; transition: transform 0.3s; }
@@ -138,6 +128,48 @@
         .delay-100 { transition-delay: 0.15s; } .delay-200 { transition-delay: 0.3s; }
 
         header { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: radial-gradient(circle at 50% 0%, #eff6ff, white); padding: 20px; }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+            border: 2px solid var(--primary);
+        }
+        .btn-primary:hover {
+            background: #334155;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(15, 23, 42, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid #cbd5e1;
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            background: white;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -145,18 +177,19 @@
     <header>
         <div class="reveal">
             <span class="badge" style="background: white; border: 1px solid #cbd5e1; color: var(--primary);">
-                <i data-lucide="bar-chart-2" size="16"></i> Progetto Statistica 2026
+                <i data-lucide="bar-chart-2" size="16"></i> &nbsp; Analisi Statistica
             </span>
             <h1>Noi e Scarpe</h1>
             <p style="font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px auto; color: #64748b;">
-                Analisi bivariata: esiste un legame tra età, brand e prezzo?
+                Statistica bivariata: esiste un legame tra età e brand, tra prezzo e comodità?
             </p>
-            <div style="display: flex; gap: 15px; justify-content: center;">
-                <a href="#qualitativa" style="text-decoration: none; padding: 15px 35px; background: var(--qual-color); color: white; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 20px rgba(5, 150, 105, 0.25);">
-                    Analisi Qualitativa
+            
+            <div class="btn-group">
+                <a href="./noiescarpe.xlsx" download class="btn btn-primary">
+                    <i data-lucide="download"></i> Scarica Excel
                 </a>
-                <a href="#quantitativa" style="text-decoration: none; padding: 15px 35px; background: var(--quant-color); color: white; border-radius: 50px; font-weight: 700; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);">
-                    Analisi Quantitativa
+                <a href="https://forms.gle/5qxQenUx7jTd7EPp6" target="_blank" class="btn btn-outline">
+                    Rispondi al sondaggio <i data-lucide="arrow-up-right"></i>
                 </a>
             </div>
         </div>
@@ -166,21 +199,21 @@
         <div class="reveal" style="margin-bottom: 50px;">
             <span class="badge b-qual"><i data-lucide="layers" size="14"></i> &nbsp; Statistica Qualitativa</span>
             <h2 style="color: var(--qual-color);">Età vs Brand Preferito</h2>
-            <p>Confrontiamo la distribuzione osservata con quella teorica.</p>
+            <p>Le preferenze cambiano davvero con l'età o sono puramente casuali?</p>
         </div>
 
         <div class="reveal delay-100 analysis-step">
             <div class="theory-notebook">
                 <div class="theory-header"><i data-lucide="eye"></i> 1. Osservazione</div>
-                <span class="step-title">Dati Rilevati</span>
+                <span class="step-title">Dati Analizzati</span>
                 <p class="theory-text">
                     La prima fase consiste nel raccogliere i dati reali tramite il sondaggio e organizzarli in una <strong>tabella a doppia entrata</strong>.
-                    Qui incrociamo le fasce d'età (righe) con i brand preferiti (colonne).
+                    Qui incrociamo le fasce d'età (colonne) con i brand preferiti (righe).
                 </p>
             </div>
             
             <div>
-                <h3 style="margin-bottom: 15px;">Frequenze Congiunte Osservate</h3>
+                <h3 style="margin-bottom: 15px;">Frequenze Congiunte</h3>
                 <div class="table-wrapper">
                     <table class="excel-table">
                         <thead>
@@ -206,14 +239,13 @@
         <div class="reveal delay-100 analysis-step">
             <div class="theory-notebook">
                 <div class="theory-header"><i data-lucide="book-open"></i> 2. Ipotesi Teorica</div>
-                <span class="step-title">Frequenze Teoriche ($F^*_{ij}$)</span>
+                <span class="step-title">Frequenze Teoriche</span>
                 <p class="theory-text">
-                    Calcoliamo come <strong>dovrebbero</strong> essere distribuiti i dati se l'Età e il Brand fossero totalmente indipendenti.
-                    <br><br>
-                    Si ottiene moltiplicando il totale di riga per il totale di colonna, diviso il totale generale ($n$).
+                    Immaginiamo che non ci sia alcun legame tra età e brand. Come sarebbero i dati? Questa tabella risponde alla domanda, distribuendo i totali in modo perfettamente equilibrato.
+                    <br>
                 </p>
                 <div class="math-card">
-                    <span class="var">F*</span> <span class="sym">=</span> 
+                    <span class="var">F<sup>*</sup><sub>ij</sub></span> <span class="sym">=</span> 
                     <div class="frac">
                         <span class="num">Tot.Col <span class="sym">×</span> Tot.Riga</span>
                         <span class="den"><span class="var">n</span></span>
@@ -222,7 +254,7 @@
             </div>
 
             <div>
-                <h3 style="margin-bottom: 15px;">Tabella di Indipendenza Teorica</h3>
+                <h3 style="margin-bottom: 15px;">Frequenze Teoriche d'Indipendenza</h3>
                 <div class="table-wrapper">
                     <table class="excel-table">
                         <thead>
@@ -248,14 +280,14 @@
         <div class="reveal delay-100 analysis-step">
             <div class="theory-notebook">
                 <div class="theory-header"><i data-lucide="git-compare"></i> 3. Confronto</div>
-                <span class="step-title">La Contingenza ($c_{ij}$)</span>
+                <span class="step-title">La Contingenza</span>
                 <p class="theory-text">
-                    Misuriamo lo <strong>scarto</strong> tra la realtà (Osservata) e l'ipotesi (Teorica).
+                    Calcola la differenza tra i dati reali e quelli teorici: un valore positivo indica una preferenza sopra la media ("attrazione"), mentre uno negativo rivela un disinteresse ("repulsione").
                     <br><br>
-                    Se il valore è positivo, c'è "attrazione" tra quell'età e quel brand. Se negativo, c'è "repulsione".
+                    In pratica, ci dice quanto la realtà è diversa dalla teoria
                 </p>
                 <div class="math-card">
-                    <span class="var">c</span> <span class="sym">=</span> <span class="var">F_oss</span> <span class="sym">-</span> <span class="var">F*</span>
+                    <span class="var">c<sub>ij</sub></span> <span class="sym">=</span> <span class="var">F<sub>ij</sub></span> <span class="sym">-</span> <span class="var">F*<sub>ij</sub></span>
                 </div>
             </div>
 
@@ -284,43 +316,87 @@
 
         <div class="reveal delay-100 analysis-step">
             <div class="theory-notebook">
+                <div class="theory-header"><i data-lucide="calculator"></i> 3. Calcolo</div>
+                <span class="step-title">Contributi al Chi-Quadro</span>
+                
+                <p class="theory-text">
+                    Questa tabella mostra i <strong>contributi parziali</strong>.
+                    <br><br>
+                    In pratica, ogni cella indica quanto quello specifico incrocio (tra Età e Brand) "pesa" sul risultato finale. 
+                    <br><br>
+                    La somma di tutti questi valori darà esattamente il nostro <strong>Chi-Quadro</strong> totale.
+                </p>
+
+                <div class="math-card">
+                    <span class="var">c</span> <span class="sym">=</span> 
+                    <div class="frac">
+                        <span class="num">(<span class="var">F<sub>ij</sub></span> <span class="sym">-</span> <span class="var">F*<sub>ij</sub></span>)²</span>
+                        <span class="den"><span class="var">F*<sub>ij</sub></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 15px;">Tabella dei Contributi al Chi-Quadro</h3>
+                <div class="table-wrapper">
+                    <table class="excel-table">
+                        <thead>
+                            <tr>
+                                <th>Età / Brand</th><th>15-24</th><th>25-34</th><th>35-44</th><th>45-54</th><th>55-64+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Nike</td><td>0,62</td><td>1,03</td><td>0,45</td><td>2,06</td><td>1,55</td></tr>
+                            <tr><td>Adidas</td><td>0,14</td><td>0,60</td><td>0,23</td><td>0,94</td><td>0,70</td></tr>
+                            <tr><td>Asics</td><td>0,93</td><td>0,09</td><td>0,05</td><td>3,52</td><td>5,25</td></tr>
+                            <tr><td>New Balance</td><td>0,06</td><td>0,06</td><td>0,03</td><td>0,12</td><td>0,09</td></tr>
+                            <tr><td>Converse / Vans</td><td>0,06</td><td>0,06</td><td>0,03</td><td>0,12</td><td>0,09</td></tr>
+                            <tr><td>Scarpa Classica</td><td>1,69</td><td>0,06</td><td>0,03</td><td>6,12</td><td>8,76</td></tr>
+                            <tr><td>Altro</td><td>1,43</td><td>2,79</td><td>0,11</td><td>5,58</td><td>1,38</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal delay-100 analysis-step">
+            <div class="theory-notebook">
                 <div class="theory-header"><i data-lucide="calculator"></i> 4. Indici Finali</div>
                 <span class="step-title">Chi-Quadro e Cramer</span>
                 <p class="theory-text">
-                    Il <strong>Chi-Quadro ($\chi^2$)</strong> somma tutti gli scarti al quadrato (pesati).
+                    Il <b>Chi-Quadro</b> è il risultato della somma di tutti i contributi della tabella precedente.
                     <br>
-                    L'indice di <strong>Cramer ($C$)</strong> normalizza il risultato tra 0 e 1 per darci un'idea chiara dell'intensità del legame.
+                    Poiché è un numero grezzo difficile da interpretare, usiamo l'indice di <b>Cramer</b> <span class="var">C</span> per tradurlo su una scala da 0 a 1 e capire la forza del legame.
                 </p>
                 <div class="math-card">
                     <span class="var">C</span> <span class="sym">=</span> 
                     <span class="sym" style="font-size:1.4em;">√</span>
                     <div class="frac">
                         <span class="num"><span class="var">χ²</span></span>
-                        <span class="den"><span class="var">n</span> <span class="sym">·</span> min(<span class="var">k</span>-1)</span>
+                        <span class="den"><span class="var">n</span> <span class="sym">·</span> min(<span class="var">k</span>-1, <span class="var">h</span>-1)</span>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h3 style="margin-bottom: 20px;">Risultati (Aggiornati)</h3>
+                <h3 style="margin-bottom: 20px;">Risultati</h3>
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
                     <div style="flex: 1; background: white; padding: 25px; border-radius: 16px; border: 1px solid #cbd5e1; text-align: center;">
-                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Chi Quadro ($\chi^2$)</div>
+                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Chi Quadro <span class="var">χ²</span></div>
                         <div style="font-size: 2.5rem; font-weight: 800; color: var(--qual-color);">46,87</div>
                     </div>
                     <div style="flex: 1; background: white; padding: 25px; border-radius: 16px; border: 1px solid #cbd5e1; text-align: center;">
-                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Indice di Cramer ($C$)</div>
-                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--qual-color);">0,3348</div>
+                        <div style="font-size: 0.9rem; text-transform: uppercase; font-weight: 700; color: #64748b; margin-bottom:10px;">Indice di Cramer <span class="var">C</span></div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--qual-color);">0,428</div>
                     </div>
                 </div>
 
                 <div class="verdict-banner v-qual">
                     <div class="v-icon-box"><i data-lucide="link" size="28"></i></div>
                     <div>
-                        <div class="v-label">Verdetto Statistico</div>
                         <div class="v-text">CORRELAZIONE MODERATA</div>
                         <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
-                            L'indice (0,33) indica che l'età influenza parzialmente la scelta del brand.
+                            L'età influenza le scelte, ma non decide tutto.
                         </div>
                     </div>
                 </div>
@@ -332,7 +408,7 @@
         <div class="reveal">
             <span class="badge b-quant"><i data-lucide="trending-up" size="14"></i> &nbsp; Statistica Quantitativa</span>
             <h2 style="color: var(--quant-color);">Prezzo vs Comfort</h2>
-            <p style="margin-bottom: 50px;">Analizziamo se c'è una correlazione lineare tra il costo delle scarpe e la comodità percepita.</p>
+            <p style="margin-bottom: 50px;">Possiamo dire che esiste una correlazione tra il prezzo e il comfort della scarpa?</p>
         </div>
 
         <div class="reveal delay-100 analysis-step">
@@ -340,17 +416,29 @@
                 <div class="theory-header"><i data-lucide="table"></i> 1. Scarti dalla Media</div>
                 <span class="step-title">Tabella dei Calcoli</span>
                 <p class="theory-text">
-                    Per ogni intervistato, confrontiamo il prezzo ($x_i$) e il comfort ($y_i$) con le medie generali ($\bar{x}, \bar{y}$).
+                    Inseriamo ciascuna coppia di valori (prezzo e comfort) nella tabella a lato.
                 </p>
+                <div class="stats-grid-box" style="margin-top: 25px; padding: 15px; background: white; border: 1px solid #fed7aa;">
+                    <div class="stat-row" style="padding: 10px 0;">
+                        <span class="stat-label" style="font-size: 0.85rem;">Media Prezzo</span>
+                        <span class="formula-tag" style="font-size: 0.7rem;">MEDIA(X)</span>
+                        <span class="stat-val" style="font-size: 1rem;">96,203125</span>
+                    </div>
+                    <div class="stat-row" style="padding: 10px 0; border-bottom: none;">
+                        <span class="stat-label" style="font-size: 0.85rem;">Media Comfort</span>
+                        <span class="formula-tag" style="font-size: 0.7rem;">MEDIA(Y)</span>
+                        <span class="stat-val" style="font-size: 1rem;">8,390625</span>
+                    </div>
+                </div>
             </div>
             
             <div>
-                <h3 style="margin-bottom: 20px;">Tabella Completa (64 unità)</h3>
+                <h3 style="margin-bottom: 20px;">Tabella Completa</h3>
                 <div class="scrollable-table">
                     <table>
                         <thead>
                             <tr>
-                                <th>$x_i$ (Prezzo)</th> <th>$y_i$ (Comfort)</th> <th>$x_i - \bar{x}$</th> <th>$y_i - \bar{y}$</th> <th>Prod. Scarti</th> <th>$(x_i - \bar{x})^2$</th>
+                                <th>x<sub>i</sub></th> <th>y<sub>i</sub></th> <th>x<sub>i</sub> - xm</th> <th>y<sub>i</sub> - ym</th> <th>(x<sub>i</sub> - xm)(y<sub>i</sub> - ym)</th> <th>(x<sub>i</sub> - xm)<sup>2</sup></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -429,67 +517,58 @@
                 <div class="theory-header"><i data-lucide="calculator"></i> 2. Indici Statistici</div>
                 <span class="step-title">Formule & Risultati</span>
                 <p class="theory-text">
-                    Di seguito sono riportati gli indici calcolati. Ecco una legenda sintetica per interpretarli:
+                    Di seguito sono riportati gli indici che sono stati calcolati.
                 </p>
                 <div style="margin-top: 15px; font-size: 0.9rem; color: #475569;">
-                    <p style="margin-bottom: 8px;"><strong>• Media ($\bar{x}, \bar{y}$):</strong> Il valore centrale o "baricentro" della distribuzione.</p>
-                    <p style="margin-bottom: 8px;"><strong>• Somma Prodotti (Codevianza):</strong> La somma degli scarti incrociati. È la base per calcolare la covarianza.</p>
-                    <p style="margin-bottom: 8px;"><strong>• Devianza ($Dev$):</strong> Misura la dispersione totale dei dati (somma dei quadrati degli scarti).</p>
-                    <p style="margin-bottom: 8px;"><strong>• Coefficiente ($a$):</strong> La pendenza della retta di regressione. Indica quanto cambia $y$ al variare di $x$.</p>
-                    <p style="margin-bottom: 8px;"><strong>• Covarianza:</strong> La media della Codevianza. Indica la direzione della relazione tra le variabili.</p>
-                    <p style="margin-bottom: 0;"><strong>• Correlazione ($r$):</strong> Indice normalizzato (da -1 a +1) che misura la forza del legame lineare.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Coefficiente:</strong> La pendenza della retta di regressione. Indica quanto cambia <span class="var">y</span> al variare di <span class="var">x</span>.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Deviazione Standard:</strong> Misura la dispersione totale dei dati. Ci dice quanto i dati si discostano dalla media.</p>
+                    <p style="margin-bottom: 8px;"><strong>• Covarianza:</strong> La media di somma prodotti. Indica l'andamento della retta di regressione.</p>
+                    <p style="margin-bottom: 0;"><strong>• Correlazione:</strong> Indice normalizzato (da -1 a +1) che misura la forza del legame lineare. <br> Più è vicino a zero, più è sicuro che non c'è nessun legame.</p>
                 </div>
             </div>
             
             <div class="stats-grid-box" style="margin-bottom: 0;">
-                
-                <div class="stat-row">
-                    <span class="stat-label">Media Prezzo</span>
-                    <span class="formula-tag">MEDIA(X)</span>
-                    <span class="stat-val">96,203125</span>
-                </div>
-                
-                <div class="stat-row">
-                    <span class="stat-label">Media Comfort</span>
-                    <span class="formula-tag">MEDIA(Y)</span>
-                    <span class="stat-val">8,390625</span>
-                </div>
-
                 <div class="stat-row">
                     <span class="stat-label">Somma Prodotti</span>
-                    <span class="formula-tag">SOMMA(Prod.Scarti)</span>
-                    <span class="stat-val">253,921875</span>
+                    <span class="formula-tag">SOMMA((x<sub>i</sub> - xm)(y<sub>i</sub> - ym))</span>
+                    <span class="stat-val">253,92</span>
                 </div>
 
                 <div class="stat-row">
-                    <span class="stat-label">Devianza X</span>
-                    <span class="formula-tag">SOMMA(Scarti²)</span>
+                    <span class="stat-label">Somma Potenza</span>
+                    <span class="formula-tag">SOMMA((x<sub>i</sub> - xm)<sup>2</sup>)</span>
                     <span class="stat-val">84.342,35938</span>
                 </div>
                 
                 <div class="stat-row">
-                    <span class="stat-label">Coeff. Reg. (a)</span>
-                    <span class="formula-tag">Codevianza / Devianza X</span>
+                    <span class="stat-label">Coefficente Angolare</span>
+                    <span class="formula-tag">Somma prodotti / Somma potenza</span>
                     <span class="stat-val">0,003010609</span>
                 </div>
 
                 <div class="stat-row">
-                    <span class="stat-label">Covarianza</span>
-                    <span class="formula-tag">Codevianza / N</span>
-                    <span class="stat-val">3,967529297</span>
+                    <span class="stat-label">Deviazine standard X</span>
+                    <span class="formula-tag">DEV.Q(X)</span>
+                    <span class="stat-val">84.342,35938</span>
                 </div>
-                
-                 <div class="stat-row" style="background: #dbeafe; border-radius: 6px; border: 1px solid #bfdbfe;">
-                    <span class="stat-label" style="color:#1e3a8a;">Correlazione (r)</span>
-                    <span class="formula-tag" style="background:white; color:#1e3a8a;">Covarianza / (σx * σy)</span>
-                    <span class="stat-val" style="color:#1e3a8a;">6,25256E-07</span>
-                </div>
-                
-                 <div class="stat-row" style="margin-top:20px; border-top: 2px solid #e2e8f0; border-bottom: none;">
-                    <span class="stat-label">Devianza Y (Somma Quadr.)</span>
+
+                <div class="stat-row">
+                    <span class="stat-label">Deviazine standard Y</span>
                     <span class="formula-tag">DEV.Q(Y)</span>
                     <span class="stat-val">75,234375</span>
                 </div>
+
+                <div class="stat-row">
+                    <span class="stat-label">Covarianza</span>
+                    <span class="formula-tag">MEDIA(Somma prodotti)</span>
+                    <span class="stat-val">3,967529297</span>
+                </div>
+                
+                 <div class="stat-row" style="background: #dbeafe; border-radius: 6px; border: 1px solid #bfdbfe;" style="margin-top:20px; border-top: 2px solid #e2e8f0; border-bottom: none;">
+                    <span class="stat-label" style="color:#1e3a8a;">Correlazione (r)</span>
+                    <span class="formula-tag" style="background:white; color:#1e3a8a;">Covarianza / (σx * σy)</span>
+                    <span class="stat-val" style="color:#1e3a8a;">6,25256E-07</span>
+                 </div>
 
             </div>
         </div>
@@ -499,24 +578,24 @@
                 <div class="theory-header"><i data-lucide="line-chart"></i> 3. Analisi Grafica</div>
                 <span class="step-title">La Retta di Regressione</span>
                 <p class="theory-text">
-                    La retta rossa rappresenta il modello matematico $y = a \cdot x + b$.
+                    La retta rossa rappresenta la linea di tendenza.
                     <br><br>
-                    Il coefficiente $a$ è bassissimo (0,003). Questo si traduce in una linea quasi perfettamente <strong>orizzontale</strong>. 
+                    Il coefficiente <span class="var">a</span>  è bassissimo (0,003). 
                 </p>
                 
                 <div style="margin-top: 20px; padding: 15px; background: white; border: 1px dashed #2563eb; border-radius: 12px; text-align: center;">
-                    <span class="step-title" style="color: #1e40af; font-size: 0.9rem;">Previsione Futura ($x=250€$)</span>
+                    <span class="step-title" style="color: #1e40af; font-size: 0.9rem;">Previsione Futura <span class="var">x = 250 €</span></span>
                     <div style="font-size: 1.8rem; font-weight: 800; color: #1e3a8a;">
-                        8,853652276
+                        8,854
                     </div>
-                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Voto Atteso</div>
-                    <span class="formula-tag" style="font-size: 0.75rem;">y = a * 250 + Intercetta</span>
+                    <div style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Comfort Atteso</div>
+                    <span class="formula-tag" style="font-size: 0.75rem;">y = a * 250 + 8,101</span>
                 </div>
             </div>
 
             <div>
                 <div class="chart-card" style="margin-top: 0;">
-                    <h3 style="margin-bottom: 20px;">Scatter Plot con Retta</h3>
+                    <h3 style="margin-bottom: 20px;">Grafico dimostrativo</h3>
                     <div style="height: 400px;">
                         <canvas id="scatterChart"></canvas>
                     </div>
@@ -525,7 +604,6 @@
                 <div class="verdict-banner v-quant" style="margin-top: 20px;">
                     <div class="v-icon-box"><i data-lucide="minimize-2" size="28"></i></div>
                     <div>
-                        <div class="v-label">Verdetto Statistico</div>
                         <div class="v-text">ASSENZA DI CORRELAZIONE</div>
                         <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
                             I punti sono sparsi senza ordine. Il prezzo non influenza il comfort.
@@ -536,12 +614,12 @@
         </div>
     </section>
 
-    <section class="synthesis-section">
+    <section class="synthesis-section" id="conclusioni">
         <div class="reveal">
             <div style="text-align: center; max-width: 800px; margin: 0 auto;">
                 <h2 style="font-size: 3.5rem; margin-bottom: 20px; color: white;">Conclusioni</h2>
                 <p style="font-size: 1.3rem; opacity: 0.8;">
-                    Dati alla mano: l'individualità vince sui trend statistici.
+                    Dall'analisi statistica svolta possiamo affermare che:
                 </p>
             </div>
 
@@ -557,19 +635,19 @@
                     <div class="glass-icon"><i data-lucide="split" size="24" color="#34d399"></i></div>
                     <span class="glass-label" style="color: #34d399;">Qualitativa</span>
                     <div class="glass-number" style="color: #34d399;">Moderata</div>
-                    <p class="glass-desc">L'età influenza parzialmente (0,33) la scelta del brand.</p>
+                    <p class="glass-desc">L'età non influenza completamente (0,33) la scelta del brand ma influisce il minimo</p>
                 </div>
 
                 <div class="glass-card" style="border-top: 4px solid #60a5fa;">
                     <div class="glass-icon"><i data-lucide="bar-chart-horizontal" size="24" color="#60a5fa"></i></div>
                     <span class="glass-label" style="color: #60a5fa;">Quantitativa</span>
                     <div class="glass-number" style="color: #60a5fa;">Non Correlato</div>
-                    <p class="glass-desc">Spendere di più non garantisce comfort. La percezione è puramente soggettiva.</p>
+                    <p class="glass-desc">Spendere di più non garantisce comfort. Il comfort è soggettivo, non dipende dal prezzo.</p>
                 </div>
             </div>
 
-            <div style="margin-top: 80px; text-align: center; opacity: 0.4; font-size: 0.9rem;">
-                Progetto Scolastico 2026 &bull; Realizzato con HTML & Chart.js
+            <div style="margin-top: 80px; text-align: center; opacity: 0.4; font-size: 0.9rem; color:rgb(255, 255, 255);">
+                Analisi Statistica &copy; 2026 &bull; Realizzato da Ambrogio Corti
             </div>
         </div>
     </section>
@@ -577,7 +655,6 @@
     <script>
         lucide.createIcons();
         
-        // Animazione Scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
@@ -585,9 +662,8 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Grafico Scatter (Quantitativa)
         new Chart(document.getElementById('scatterChart'), {
-            type: 'bubble', // Usiamo bubble per i punti
+            type: 'bubble',
             data: {
                 datasets: [
                     {
@@ -608,14 +684,13 @@
                     {
                         type: 'line',
                         label: 'Retta di Regressione',
-                        // Calcolata con y = 0.003x + 8.10 (circa)
                         data: [
                             {x: 0, y: 8.10}, 
                             {x: 260, y: 8.88}
                         ],
-                        borderColor: '#dc2626', // Rossa per contrasto
+                        borderColor: '#dc2626',
                         borderWidth: 2,
-                        pointRadius: 0, // Nessun punto sulla linea
+                        pointRadius: 0,
                         fill: false
                     }
                 ]
@@ -650,5 +725,4 @@
         });
     </script>
 </body>
-
 </html>
